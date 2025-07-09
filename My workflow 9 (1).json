@@ -1,0 +1,127 @@
+{
+  "name": "My workflow 9",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "symptom-input",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "aeee0e96-649e-46c7-b81a-e6a316c7a565",
+      "name": "Webhook",
+      "webhookId": "374ea5e5-b87f-43ac-a115-719093637aeb"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=The user says: {{$json[\"body\"][\"symptom\"]}}. Based on this, detect the language. Then give a short possible diagnosis and a treatment suggestion. Respond in the same language, and keep the message short, friendly, and easy to understand.\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ],
+      "id": "041ecd18-f40b-4847-b032-b4e8e9255c03",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.0-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        140,
+        180
+      ],
+      "id": "6f833c0a-6965-4635-bcd9-573c99aeb28b",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "fyo68m6o2o5Oyf45",
+          "name": "Google Gemini(PaLM) Api account 7"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "ruchikababurp@gmail.com",
+        "subject": "assistant",
+        "emailType": "text",
+        "message": "={{ $json.output }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        580,
+        0
+      ],
+      "id": "0897f4ea-231c-4c07-b135-cb4b8f3a15fb",
+      "name": "Send a message",
+      "webhookId": "145ed071-2670-4654-aabd-d183c38fd364",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "cuchGw7evmPHDtvf",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "0a4f2613-522e-4517-b9dc-fb4c1dcf4102",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "e826d2f1c3cb173c1cb2233e327dc24b26c4e0922f801ad0edf0d7d112f50f03"
+  },
+  "id": "iJboFGG9QM1WvizU",
+  "tags": []
+}
